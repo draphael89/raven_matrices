@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Raven's Progressive Matrices</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Raven's Progressive Matrices</h1>
+    <div class="matrix">
+        <table>
+            {% for row in matrix %}
+            <tr>
+                {% for cell in row %}
+                <td>
+                    {% if cell != '?' %}
+                    <div class="element">
+                        <img src="{{ url_for('static', filename='images/' + cell['shape'] + '_' + cell['pattern'] + '.png') }}" alt="{{ cell['shape'] }} {{ cell['pattern'] }}">
+                    </div>
+                    {% else %}
+                    <div class="missing-piece">?</div>
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="answer-options">
+        <form action="{{ url_for('submit') }}" method="post">
+            {% for option in answer_options %}
+            <label>
+                <input type="radio" name="answer" value="{{ loop.index0 }}">
+                <img src="{{ url_for('static', filename='images/' + option['shape'] + '_' + option['pattern'] + '.png') }}" alt="{{ option['shape'] }} {{ option['pattern'] }}">
+            </label>
+            {% endfor %}
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <div class="score">
+        <p>Score: {{ score }}</p>
+    </div>
+    <div class="feedback{% if is_correct %} correct{% else %} incorrect{% endif %}">
+        {% if is_correct %}
+            Correct!
+        {% else %}
+            Incorrect. Try again!
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
